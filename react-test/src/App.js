@@ -20,14 +20,22 @@ class App extends React.Component {
     }
   }
   async componentDidMount() {
-    const response = await fetch(`http://www.filltext.com/?rows=110&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
+    const response = await fetch(`http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
     const data = await response.json()
     this.setState({
       isLoading: false,
       data: data,
+      currentData: data.slice(0,50),
       totalPages: Math.ceil(data.length/50),
       currentPage: 1
     })
+    console.log(this.state.totalPages)
+  }
+  changePage = (key) => {
+    this.setState({
+      currentData: this.state.data.slice((key-1)*50,key*50),
+      currentPage: key
+  })
   }
   sortBySymbolHandler = (key) => {
     this.setState({
@@ -41,7 +49,7 @@ class App extends React.Component {
             return 0;
         }
       }),
-
+      currentData: this.state.data.slice((this.state.currentPage-1)*50,this.state.currentPage*50),
       direction: {
           [key]: this.state.direction[key] === 'asc'
           ? 'desc'
@@ -49,14 +57,15 @@ class App extends React.Component {
       }
   })
   }
+
   render() {
     return (
       <div>
         {
-          this.state.isLoading ? <Loader /> : <Table data={this.state.data} sortBySymbol={this.sortBySymbolHandler}/>
+          this.state.isLoading ? <Loader /> : <Table data={this.state.currentData} sortBySymbol={this.sortBySymbolHandler}/>
         }
         {
-          this.state.isLoading ? <Loader /> : <PaginationTable currentPage={this.state.currentPage} totalPages={this.state.totalPages}/>
+          this.state.isLoading ? <Loader /> : <PaginationTable currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage}/>
         }
         
       </div>

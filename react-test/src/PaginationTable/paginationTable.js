@@ -3,10 +3,9 @@ import PaginationTableItem from "./paginationTableItem.js"
 
 
 export default function PaginationTable(props){
-  console.log(props)
   return (
     <nav aria-label="...">
-        <PaginationTableItem currentPage={props.currentPage} totalPages={props.totalPages}/>
+        <PaginationTableItem currentPage={props.currentPage} totalPages={props.totalPages} changePage={props.changePage}/>
     </nav>
         // <li class="page-item disabled">
         //   <a class="page-link" tabindex="-1">1</a>
