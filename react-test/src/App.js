@@ -1,11 +1,16 @@
 import React from 'react'
 import Table from './Table/table.js'
 import Loader from './Loader/Loader.js'
+import PaginationTable from './PaginationTable/paginationTable.js'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
   state ={
     isLoading: true,
     data: [],
+    currentData: [],
+    currentPage: null,
+    totalPages: null,
     direction: {
       id: 'asc',
       firstName: 'asc',
@@ -15,11 +20,13 @@ class App extends React.Component {
     }
   }
   async componentDidMount() {
-    const response = await fetch(`http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
+    const response = await fetch(`http://www.filltext.com/?rows=110&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
     const data = await response.json()
     this.setState({
       isLoading: false,
-      data
+      data: data,
+      totalPages: Math.ceil(data.length/50),
+      currentPage: 1
     })
   }
   sortBySymbolHandler = (key) => {
@@ -46,9 +53,12 @@ class App extends React.Component {
     return (
       <div>
         {
-        this.state.isLoading ? <Loader /> : <Table data={this.state.data} sortBySymbol={this.sortBySymbolHandler}
-        sortByPrice={this.sortByPriceHandler}/>
+          this.state.isLoading ? <Loader /> : <Table data={this.state.data} sortBySymbol={this.sortBySymbolHandler}/>
         }
+        {
+          this.state.isLoading ? <Loader /> : <PaginationTable currentPage={this.state.currentPage} totalPages={this.state.totalPages}/>
+        }
+        
       </div>
     );
   }

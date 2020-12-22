@@ -7,11 +7,11 @@ export default function Table(items){
         <table>
             <tbody>
                 <tr>
-                    <td><button onClick={() => items.sortBySymbol('id')}/>id</td>
-                    <td><button onClick={() => items.sortBySymbol('firstName')}/>firstName</td>
-                    <td><button onClick={() => items.sortBySymbol('lastName')}/>lastName</td>
-                    <td><button onClick={() => items.sortBySymbol('email')}/>email</td>
-                    <td><button onClick={() => items.sortBySymbol('phone')}/>phone</td>
+                    <td onClick={() => items.sortBySymbol('id')}>id</td>
+                    <td onClick={() => items.sortBySymbol('firstName')}>firstName</td>
+                    <td onClick={() => items.sortBySymbol('lastName')}>lastName</td>
+                    <td onClick={() => items.sortBySymbol('email')}>email</td>
+                    <td onClick={() => items.sortBySymbol('phone')}>phone</td>
                 </tr>
                 { items.data.map((item, idx) => {
                     return <TableItem item={item} key={idx}/>
