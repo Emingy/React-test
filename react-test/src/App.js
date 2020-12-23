@@ -1,5 +1,6 @@
 import React from 'react'
 import Table from './Table/table.js'
+import Filter from './Filter/filter.js'
 import Loader from './Loader/Loader.js'
 import PaginationTable from './PaginationTable/paginationTable.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,7 +18,9 @@ class App extends React.Component {
       lastName: 'asc',
       email: 'asc',
       phone: 'asc'
-    }
+    },
+    filterValue:null,
+    filtered:null
   }
   async componentDidMount() {
     const response = await fetch(`http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
@@ -36,6 +39,27 @@ class App extends React.Component {
       currentData: this.state.data.slice((key-1)*50,key*50),
       currentPage: key
   })
+  }
+  changeInput = (e) => {
+    this.setState({
+      filterValue: e
+    })
+  }
+  search = () => {
+    this.setState({
+      currentData: this.state.data.filter(item => {
+        var flag = false
+        Object.values(item).forEach((val) => {
+          if(String(val).indexOf(this.state.filterValue) >-1){
+            flag = true;
+            return;
+          }
+        });
+        if(flag) return item;
+      }),
+      filtered: this.state.filterValue
+    })
+    console.log(this.state.currentData)
   }
   sortBySymbolHandler = (key) => {
     this.setState({
@@ -61,6 +85,9 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        {
+          this.state.isLoading ? <Loader /> : <Filter search={this.search} change={this.changeInput}/>
+        }
         {
           this.state.isLoading ? <Loader /> : <Table data={this.state.currentData} sortBySymbol={this.sortBySymbolHandler}/>
         }

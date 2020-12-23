@@ -4,7 +4,6 @@ import React from 'react'
 export default function PaginationTableItem(props){
     const getItem = (curr, tot) => {
         let pagination = [];
-        console.log(tot)
         if(curr>1){
             pagination.push(<li class="page-item"><a  onClick={() => props.changePage(curr-1)} class="page-link">{curr-1}</a></li>);
         }
