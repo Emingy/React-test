@@ -14,7 +14,7 @@ export default function Table(items){
                     <td onClick={() => items.sortBySymbol('phone')}>phone</td>
                 </tr>
                 { items.data.map((item, idx) => {
-                    return <TableItem item={item} key={idx}/>
+                    return <TableItem item={item} key={idx} func={items}/>
                 }) }
             </tbody>
         </table>

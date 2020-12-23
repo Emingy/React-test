@@ -2,6 +2,7 @@ import React from 'react'
 import Table from './Table/table.js'
 import Filter from './Filter/filter.js'
 import Loader from './Loader/Loader.js'
+import AdditionalInfo from './AdditionalInfo/additionalInfo.js'
 import PaginationTable from './PaginationTable/paginationTable.js'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -20,7 +21,8 @@ class App extends React.Component {
       email: 'asc',
       phone: 'asc'
     },
-    filterValue:null
+    filterValue:null,
+    additionalInfo:[]
   }
   async componentDidMount() {
     const response = await fetch(`http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
@@ -33,7 +35,6 @@ class App extends React.Component {
       totalPages: Math.ceil(data.length/50),
       currentPage: 1
     })
-    console.log(this.state.totalPages)
   }
   changePage = (key) => {
     this.setState({
@@ -79,7 +80,15 @@ class App extends React.Component {
       currentPage: 1
     })
   }
-
+  additionalInformation = (firstName, lastName) => {
+    this.setState({
+      additionalInfo:  this.state.data.filter(item => {
+        if (item.firstName.indexOf(firstName) >-1 && item.lastName.indexOf(lastName) >-1) {
+          return item;
+        }
+      })
+    })
+  }
   render() {
     return (
       <div>
@@ -87,12 +96,16 @@ class App extends React.Component {
           this.state.isLoading ? <Loader /> : <Filter search={this.search}/>
         }
         {
-          this.state.isLoading ? <Loader /> : <Table data={this.state.currentData} sortBySymbol={this.sortBySymbolHandler}/>
+          this.state.isLoading ? <Loader /> : <Table data={this.state.currentData} sortBySymbol={this.sortBySymbolHandler} additionalInformation={this.additionalInformation}/>
+        }
+        {
+          this.state.isLoading ? <Loader /> : this.state.additionalInfo.map(item => {
+            return <AdditionalInfo data={item}/>
+        }) 
         }
         {
           this.state.isLoading ? <Loader /> : <PaginationTable currentPage={this.state.currentPage} totalPages={this.state.totalPages} changePage={this.changePage}/>
         }
-        
       </div>
     );
   }

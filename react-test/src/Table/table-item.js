@@ -1,14 +1,14 @@
 import React from 'react'
 
 
-export default function TableItem({item}){
+export default function TableItem(item){
     return (
-        <tr>
-            <td>{item.id}</td>
-            <td>{item.firstName}</td>
-            <td>{item.lastName}</td>
-            <td>{item.email}</td>
-            <td>{item.phone}</td>
+        <tr onClick={() => item.func.additionalInformation(item.item.firstName,item.item.lastName)}>
+            <td>{item.item.id}</td>
+            <td>{item.item.firstName}</td>
+            <td>{item.item.lastName}</td>
+            <td>{item.item.email}</td>
+            <td>{item.item.phone}</td>
         </tr>
     )
 }
