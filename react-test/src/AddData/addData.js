@@ -2,7 +2,6 @@ import React from 'react'
 
 
 export default function AddData(props){
-    console.log(props.state)
     var btn = {
         btnClass:"btn btn-secondary btn-lg",
         btnDisabled: true
@@ -35,20 +34,32 @@ export default function AddData(props){
                     <td>phone</td>
                 </tr>
                 <tr>
-                    <td><input type="number" onChange={(e)=>e.target.value!='' ? props.checkInput('inputIdNull',true) : props.checkInput('inputIdNull',false)
+                    <td><input id='add-input-id' type="number" onChange={(e)=>e.target.value!='' ? props.checkInput('inputIdNull',true) : props.checkInput('inputIdNull',false)
                     }/></td>
-                    <td><input type="text" onChange={(e)=>e.target.value!='' ? props.checkInput('inputFirstNameNull',true) : props.checkInput('inputFirstNameNull',false)
+                    <td><input id='add-input-firstName' type="text" onChange={(e)=>e.target.value!='' ? props.checkInput('inputFirstNameNull',true) : props.checkInput('inputFirstNameNull',false)
                     }/></td>
-                    <td><input type="text" onChange={(e)=>e.target.value!='' ? props.checkInput('inputLastNameNull',true)  : props.checkInput('inputLastNameNull',false)
+                    <td><input id='add-input-lastName' type="text" onChange={(e)=>e.target.value!='' ? props.checkInput('inputLastNameNull',true)  : props.checkInput('inputLastNameNull',false)
                     }/></td>
-                    <td><input type="text" onChange={(e)=>e.target.value!='' ? props.checkInput('inputEmailNull',true)  : props.checkInput('inputEmailNull',false)
+                    <td><input id='add-input-email' type="text" onChange={(e)=>e.target.value!='' ? props.checkInput('inputEmailNull',true)  : props.checkInput('inputEmailNull',false)
                     }/></td>
-                    <td><input type="text" onChange={(e)=>e.target.value!='' ? props.checkInput('inputPhoneNull',true)  : props.checkInput('inputPhoneNull',false)
+                    <td><input id='add-input-phone' type="text" onChange={(e)=>e.target.value!='' ? props.checkInput('inputPhoneNull',true)  : props.checkInput('inputPhoneNull',false)
                     }/></td>
                 </tr>
             </tbody>
         </table>
-            <button className={btn.btnClass} onClick={()=>console.log('add')} disabled={btn.btnDisabled}>Добавить в таблицу</button>
+            <button className={btn.btnClass} onClick={()=>{
+                let id =document.getElementById('add-input-id')
+                let firstName =document.getElementById('add-input-firstName')
+                let lastName =document.getElementById('add-input-lastName')
+                let email =document.getElementById('add-input-email')
+                let phone =document.getElementById('add-input-phone')
+                props.addDataToState(id.value,firstName.value,lastName.value,email.value,phone.value)
+                id.value=''
+                firstName.value=''
+                lastName.value=''
+                email.value=''
+                phone.value=''
+                }} disabled={btn.btnDisabled}>Добавить в таблицу</button>
         </div>
              : <button onClick={() => props.openFormAddData()}>Добавить</button>
         }

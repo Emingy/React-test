@@ -32,24 +32,24 @@ class App extends React.Component {
     inputPhoneNull: false
   }
   async componentDidMount() {
-    // const response = await fetch(`http://www.filltext.com/?rows=100&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
-    // const data = await response.json()
-    const data = [
-      {
-        id: 101,
-        firstName: 'Sue',
-        lastName: 'Corson',
-        email: 'DWhalley@in.gov',
-        phone: '(612)211-6296',
-        address: {
-          streetAddress: '9792 Mattis Ct',
-          city: 'Waukesha',
-          state: 'WI',
-          zip: '22178'
-        },
-        description: 'et lacus magna dolor...',
-      }
-    ]
+    const response = await fetch(`http://www.filltext.com/?rows=100&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
+    const data = await response.json()
+    // const data = [
+    //   {
+    //     id: 101,
+    //     firstName: 'Sue',
+    //     lastName: 'Corson',
+    //     email: 'DWhalley@in.gov',
+    //     phone: '(612)211-6296',
+    //     address: {
+    //       streetAddress: '9792 Mattis Ct',
+    //       city: 'Waukesha',
+    //       state: 'WI',
+    //       zip: '22178'
+    //     },
+    //     description: 'et lacus magna dolor...',
+    //   }
+    // ]
     this.setState({
       isLoading: false,
       data: data,
@@ -120,10 +120,31 @@ class App extends React.Component {
   checkInput = (key,val) =>{
       this.setState({
         [key]:val
-      })
-    
-    // console.log(this.state.addDataState)
-    
+      })    
+  }
+  addDataToState = (id,firstName,lastName,email,phone) =>{
+    let add = {
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      addedByUser: true
+    }
+    this.setState({
+      isLoading: false,
+      data: this.state.data.unshift(add),
+      filteredData: this.state.data,
+      currentData: this.state.data.slice(0,50),
+      totalPages: Math.ceil(this.state.data.length/50),
+      currentPage: 1,
+      addDataFormFlag: false,
+      inputIdNull: false,
+      inputFirstNameNull: false,
+      inputLastNameNull: false,
+      inputEmailNull: false,
+      inputPhoneNull: false
+    })
   }
   render() {
     return (
@@ -132,7 +153,7 @@ class App extends React.Component {
           this.state.isLoading ? <Loader /> : <Filter search={this.search}/>
         }
         {
-          this.state.isLoading ? <Loader /> : <AddData formFlag={this.state.addDataFormFlag} openFormAddData={this.openFormAddData} checkInput={this.checkInput} state={this.state}/>
+          this.state.isLoading ? <Loader /> : <AddData formFlag={this.state.addDataFormFlag} openFormAddData={this.openFormAddData} checkInput={this.checkInput} state={this.state} addDataToState={this.addDataToState}/>
         }
         {
           this.state.isLoading ? <Loader /> : <Table data={this.state.currentData} sortBySymbol={this.sortBySymbolHandler} additionalInformation={this.additionalInformation}/>
