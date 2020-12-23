@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function TableItem(item){
     return (
-        <tr onClick={() => item.func.additionalInformation(item.item.firstName,item.item.lastName)}>
+        <tr onClick={() => item.func.additionalInformation(item.item.id,item.item.firstName,item.item.lastName)}>
             <td>{item.item.id}</td>
             <td>{item.item.firstName}</td>
             <td>{item.item.lastName}</td>

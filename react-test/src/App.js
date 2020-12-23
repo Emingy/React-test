@@ -80,10 +80,10 @@ class App extends React.Component {
       currentPage: 1
     })
   }
-  additionalInformation = (firstName, lastName) => {
+  additionalInformation = (id, firstName, lastName) => {
     this.setState({
       additionalInfo:  this.state.data.filter(item => {
-        if (item.firstName.indexOf(firstName) >-1 && item.lastName.indexOf(lastName) >-1) {
+        if (item.firstName==firstName && item.lastName==lastName && item.id==id) {
           return item;
         }
       })
