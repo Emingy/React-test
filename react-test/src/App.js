@@ -10,6 +10,7 @@ class App extends React.Component {
     isLoading: true,
     data: [],
     currentData: [],
+    filteredData: [],
     currentPage: null,
     totalPages: null,
     direction: {
@@ -19,8 +20,7 @@ class App extends React.Component {
       email: 'asc',
       phone: 'asc'
     },
-    filterValue:null,
-    filtered:null
+    filterValue:null
   }
   async componentDidMount() {
     const response = await fetch(`http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
@@ -28,6 +28,7 @@ class App extends React.Component {
     this.setState({
       isLoading: false,
       data: data,
+      filteredData: data,
       currentData: data.slice(0,50),
       totalPages: Math.ceil(data.length/50),
       currentPage: 1
@@ -36,34 +37,13 @@ class App extends React.Component {
   }
   changePage = (key) => {
     this.setState({
-      currentData: this.state.data.slice((key-1)*50,key*50),
+      currentData: this.state.filteredData.slice((key-1)*50,key*50),
       currentPage: key
   })
   }
-  changeInput = (e) => {
-    this.setState({
-      filterValue: e
-    })
-  }
-  search = () => {
-    this.setState({
-      currentData: this.state.data.filter(item => {
-        var flag = false
-        Object.values(item).forEach((val) => {
-          if(String(val).indexOf(this.state.filterValue) >-1){
-            flag = true;
-            return;
-          }
-        });
-        if(flag) return item;
-      }),
-      filtered: this.state.filterValue
-    })
-    console.log(this.state.currentData)
-  }
   sortBySymbolHandler = (key) => {
     this.setState({
-      data: this.state.data.sort((a, b) => {
+      filteredData: this.state.filteredData.sort((a, b) => {
         const asc = this.state.direction[key] === 'asc';
         if (a[key] < b[key]) {
             return asc ? -1 : 1;
@@ -73,7 +53,7 @@ class App extends React.Component {
             return 0;
         }
       }),
-      currentData: this.state.data.slice((this.state.currentPage-1)*50,this.state.currentPage*50),
+      currentData: this.state.filteredData.slice((this.state.currentPage-1)*50,this.state.currentPage*50),
       direction: {
           [key]: this.state.direction[key] === 'asc'
           ? 'desc'
@@ -81,12 +61,30 @@ class App extends React.Component {
       }
   })
   }
+  search = (key) => {
+    this.setState({
+      filteredData: this.state.data.filter(item => {
+        var flag = false
+        Object.values(item).forEach((val) => {
+          if(String(val).indexOf(key) >-1){
+            flag = true;
+            return;
+          }
+        });
+        if(flag) return item;
+      }),
+      filterValue: key,
+      currentData: this.state.filteredData.slice(0,50),
+      totalPages: Math.ceil(this.state.filteredData.length/50),
+      currentPage: 1
+    })
+  }
 
   render() {
     return (
       <div>
         {
-          this.state.isLoading ? <Loader /> : <Filter search={this.search} change={this.changeInput}/>
+          this.state.isLoading ? <Loader /> : <Filter search={this.search}/>
         }
         {
           this.state.isLoading ? <Loader /> : <Table data={this.state.currentData} sortBySymbol={this.sortBySymbolHandler}/>
